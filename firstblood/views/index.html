@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Document</title>
+</head>
+<body>
+	<% include header.html %>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <form action="./create">
+    	<div>姓名：<input type="text" name="add"/></div>
+    	<div>密码：<input type="password" name="password"/></div>
+    	<div>订单编号：<input type="text" name="numbers"/></div>
+    	<div>送货方式：<input type="text" name="name"/></div>
+    	<div>用户电话：<input type="text" name="phone"/></div>
+    	<div>家庭地址：<input type="text" name="address"/></div>
+        <input type="submit" value="增加"></div>
+        <a href="javascrpt:" id="el_add">增加</a>
+    </form>
+    <!--<form action="./update">
+    	<input type="text" name="text"/>
+        <input type="submit" value="修改">
+    </form>
+    <form action="./create">
+    	<input type="text" name="user"/>
+        <input type="submit" value="保存">
+    </form>
+    <form action="./delete">
+    	<input type="text" name="password"/>
+        <input type="submit" value="删除">
+    </form>-->
+		<div>
+			用户名：&emsp;<input type="text" id="search"/>
+		</div>
+		<div>
+			用户密码：<input type="text" name="password1"/>
+		</div>
+		<div>
+			用户年龄：<input type="text" name="age1"/>
+		</div>
+		<input type="button" value="查询" id="el_search"/>
+    <p><a href="login" class="btn btn-primary">登陆</a></p>
+    <p><a href="login2" class="btn btn-primary">登录二</a></p>
+    <div class="test_pages">查询总页数</div>
+    
+    <!--表二查询-->
+    <input type="text" name="username"/>
+    <div class="findNew btn btn-primary">查询用户</div>
+	<% include footer.html %>
+	<script type="text/javascript">
+		$(function(){
+		 	$.ajax({
+		 		type:"get",
+		 		url:"/findnew",
+		 		async:true,
+		 		success:function(data){
+//		 			console.log(data)
+		 		},
+		 		error:function(){
+		 			alert('连接失败了！')
+		 		}
+		 	});
+		 })
+		//表二查询
+		$('.findNew').on('click',function(){
+			var newName = $('input[name=username]').val();
+			$.ajax({
+				type:"get",
+				url:"/findnew?name="+newName,
+				async:true,
+				success:function(data){
+					if(data == 1){
+						alert('我靠！没有这个人！')
+					}else{
+						console.log(data[0])
+					}
+				},
+				error:function(){
+					alert('请求服务器失败！')
+				}
+			});
+		})
+		
+		$('#el_add').on('click',function(data){
+//			'/create?add=wangtao&password=wangtao7&age='
+			var user7 = $('input[name=add]').val();
+			var password = $('input[name=password]').val();
+			var numbers = $('input[name=numbers]').val();
+			var names = $('input[name=name]').val();
+			var phones = $('input[name=phone]').val();
+			var addresss = $('input[name=address]').val();
+			$.ajax({
+				type:"get",
+				url:"/create?numbers="+numbers+'&password='+password+'&name='+names+'&phone='+phones+'&address='+addresss+'&add='+user7,
+				async:true,
+				success:function(data){
+					if(data == 1){
+						alert('添加成功！')
+					}else{
+						alert('已有相同名字，请重新输入！')
+					}
+				},
+				error:function(){
+					alert('请求错误！')
+				}
+			});
+		})
+		
+		$('#el_search').on('click',function(){
+			var data = $('#search').val().toString();
+			$.ajax({
+				type:"get",
+				url:"/read3?user="+data,
+				async:true,
+				success:function(datas){
+					console.log(datas)
+					if(datas == '1'){
+						alert('您输入的用户名不存在，请重新输入！')
+					}else{
+						console.log('datas:',datas.length)
+						if(datas.length == 1){
+							$('input[name=password1]').val(datas[0].password)
+							$('input[name=age1]').val(datas[0].age)
+						}else{
+							$('input[name=password1]').val(datas.password)
+							$('input[name=age1]').val(datas.age)
+						}
+					}
+				},
+				error:function(){
+					alert("请求失败！！")
+				}
+			});
+		})
+	var totalPages
+		$(function(){
+			$.ajax({
+				type:"get",
+				url:"/read5",
+				async:false,
+				success:function(datas){
+					totalPages = datas;
+				},
+				error:function(){
+					alert('请求失败!')
+				}
+			});
+		})
+	
+		$('.test_pages').on('click',function(){
+			$.ajax({
+				type:"get",
+				url:"/read4",
+				async:false,
+				success:function(datas){
+					console.log('1111111111:',datas,totalPages)
+				},
+				error:function(){
+					alert('请求失败!')
+				}
+			});
+		})
+		
+	</script>
+</body>
+</html>

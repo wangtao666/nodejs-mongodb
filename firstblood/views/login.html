@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>登录</title>
+</head>
+<body>
+	<% include header.html %>
+	    <div class="container-fluid">
+	        <div class="row-fluid">
+	        <form class="span12" action="home" method="post">
+	            <fieldset>
+	                <legend>请输入</legend>
+	            <p>
+	                <span>用户名:</span>
+	                <br>
+	                <input id="user" name="user" type="text">
+	            </p>
+	            <p>
+	                <span>密码:</span>
+	                <br>
+	                <input id="password" name="password" type="password">
+	            </p>
+	            <p><input type="button" value="登陆" class="btn btn-danger" id="el_login"></p>
+	            </fieldset>
+	        </form>
+	        </div>
+	    </div>
+	<% include footer.html %>
+	<script type="text/javascript">
+		$('#el_login').on('click',function(){
+			var user = $('#user').val();
+			var password = $('#password').val();
+			console.log(user);
+			if(user !== '' && password !== ''){
+				$.ajax({
+					type:"get",
+					url:"/read3?user="+user+'&password='+password,
+					async:true,
+					timeout:10000,
+					success:function(data){
+						if(data == 1){
+							alert('账号不存在，请重新输入！')
+						}else{
+							if(data.length == 1){
+								if(password !== data[0].password){
+									alert('您输入的密码不正确！')
+								}else{
+									console.log('login1')
+									alert('登录成功！');
+									function SetCookie(name, value){  
+									    //定义一天  
+									    var days = 1;  
+									    var exp = new Date();  
+									    //定义的失效时间，  
+									    exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);    
+									    //写入Cookie  ，toGMTstring将时间转换成字符串。  
+									    
+									}
+//									$('.span12').submit();
+								}
+							}else{
+								if(password !== data.password){
+									alert('您输入的密码不正确！')
+								}else{
+									alert('登录成功！');
+									console.log('login2')
+//									$('.span12').submit();
+								}
+							}
+						}
+					},
+					error:function(){
+						alert('请求失败！');
+					},
+					complete:function(){
+						//获取所有key的方法
+						$.ajax({
+							type:"get",
+							url:"/huancun?all=*",
+							async:true,
+							timeout:10000,
+							success:function(data){
+								console.log(data)
+								$.each(data, function(index,item) {
+									console.log(item.user);
+								});
+								$('.span12').submit();
+							},
+							error:function(){
+								alert('获取缓存失败！')
+							}
+						});
+						//暂时还不知道怎么请求超时了重发请求查询缓存，而且页面跳转不到home页面，好像有某个条件在控制这个页面显示！
+					}
+				});
+			}else{
+				alert('账号或者密码不正确，请重新输入！！！')
+			}
+		})
+		//设置cookie
+		function setCookie(c_name,value,expiredays){
+			var exdate=new Date()
+			exdate.setDate(exdate.getDate()+expiredays)
+			document.cookie=c_name+ "=" +value+ ((expiredays==null) ? "" : ";expires="+exdate)
+		}
+		//获取cookie
+		function getCookie(cname) {
+		    var name = cname + "=";
+		    var ca = document.cookie.split(';');
+		    for(var i=0; i<ca.length; i++) {
+		        var c = ca[i];
+		        while (c.charAt(0)==' ') c = c.substring(1);
+		        if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+		    }
+		    return "";
+		}
+		//删除cookie
+		function clearCookie(name) {  
+		    setCookie(name, "", -1);  
+		}  
+//		setCookie("user","asssd",1)
+//		console.log('getCookie:',getCookie(user))
+		setCookie("user","",-1)
+		console.log('cookie:',document.cookie)
+	</script>
+</body>
+</html>

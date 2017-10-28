@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css"/>
+	<style type="text/css">
+		.btn-default1{
+			background: #337ab7;
+			color: #fff;
+		}
+		.btn-default1:hover{
+			color: #fff!important;
+		}
+		#table_my{
+			height: 300px;
+		}
+		.el_search{
+		    width: 60px;
+		    height: 26px;
+		    position: relative;
+		    top: -1px;
+		    left: 10px;
+		}
+		.progress{
+			position: absolute;
+			width: 500px;
+			display: none;
+		}
+	</style>
+	<script src="/javascripts/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <h1>后台管理</h1>
+    <% if (status) { %>
+        <p class="lead">欢迎您： <%= username %></p> 
+        <p class="label label-info">登陆时间： <%= date %></p>
+        <h3>管理员列表</h3>
+        <span>总数据：</span><input type="text" name="total" readonly/>
+        <input type="text" name="el_search" placeholder="请输入用户名进行查询"/>
+            <table class="table table-hover span12" id="table_my">
+                <thead>
+                <tr>
+                    <th>#id</th>
+                    <th>用户名</th>
+                    <th>密码</th>
+                    <th>年龄</th>
+                    <th>订单编号</th>
+                    <th>送货方式</th>
+                    <th>用户电话</th>
+                    <th>家庭地址</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody class="table_mys">
+                </tbody>
+            </table>
+            <!-- 新增数据模态框 -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">新增</h4>
+			      </div>
+			      <div class="modal-body">
+			        <table class="table table-hover span12 el_Tk">
+			        	<thead>
+			                <tr>
+			                    <th>用户名</th>
+			                    <th>密码</th>
+			                    <th>年龄</th>
+			                    <th>订单编号</th>
+			                    <th>送货方式</th>
+			                    <th>用户电话</th>
+			                    <th>家庭地址</th>
+			                </tr>
+		                </thead>
+			        	<tbody>
+		                    <tr class="el_add">
+		                    	<!--动态改变标题未完成-->
+		                        <td><input type="text" data-toggle="tooltip" data-placement="top" title="请输入新的用户名" oninput="changge_value(this)"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td>
+		                        	<a href="javascrpt:" onclick="handleClick2()" class="btn btn-primary btn-sm">+</a>
+		                        	<a href="javascrpt:" onclick="remove_self(this)" class="btn btn-primary btn-sm">删除</a>
+		                        </td>
+		                    </tr>
+		                </tbody>
+			        </table>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			        <button type="button" class="btn btn-primary" onclick="handleClick3()">保存</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			
+			 <!-- 编辑数据模态框 -->
+			<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">新增</h4>
+			      </div>
+			      <div class="modal-body">
+			        <table class="table table-hover span12 el_Tk">
+			        	<thead>
+			                <tr>
+			                    <th>#id</th>
+			                    <th>用户名</th>
+			                    <th>密码</th>
+			                    <th>年龄</th>
+			                    <th>订单编号</th>
+			                    <th>送货方式</th>
+			                    <th>用户电话</th>
+			                    <th>家庭地址</th>
+			                </tr>
+		                </thead>
+			        	<tbody>
+		                    <tr class="el_edit">
+		                    	<td><input type="text" readonly="readonly"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                    </tr>
+		                </tbody>
+			        </table>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			        <button type="button" class="btn btn-primary" onclick="handleClick4()">保存</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+				
+			<!--分页按钮-->
+			<nav aria-label="Page navigation">
+			  <ul class="pagination">
+			    <li class="el_pagination2" onclick="up_Page()">
+			      <a href="javascrpt:" aria-label="Previous">
+			        <span aria-hidden="true">&laquo;</span>
+			      </a>
+			    </li>
+			    <!--填充内容区域-->
+			    <li class="el_pagination" onclick="dowm_Page()">
+			    	<a href="javascrpt:" aria-label="Next">
+			        	<span aria-hidden="true">&raquo;</span>
+			    	</a>
+			    </li>
+			  </ul>
+			</nav>
+			<!--进度条-->
+			<div class="progress">
+			  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+			    0%
+			  </div>
+			</div>
+            <!--<a href="javascript:">新增</a>-->
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+			 		新增
+			</button>
+            <a href="/" class="btn btn-primary btn-sm">退出</a>
+        <% } else {%>
+        	<strong>登录失败 <a href="/">回首页</a></strong>
+        <% } %>  
+    </div>
+</div>
+<% include footer.html %>
+<script type="text/javascript">
+	//新增用户,第一个输入框值发生改变的事件
+	function changge_value(obj){
+		var user = $(obj).val();
+		$.ajax({
+			type:"get",
+			url:"/read3?user="+user,
+			async:true,
+			success:function(data){
+				if(data[0] == 1){
+					$(obj).prop({'title':'恭喜！该名字可用！'}).tooltip('fixTitle').tooltip('show');
+				}else{
+					$(obj).prop({'title':'已有重复名字，重新选一个吧！'}).tooltip('fixTitle').tooltip('show');
+				}
+			},
+			error:function(){
+				alert('请求失败！')
+			}
+		});
+	}
+	
+	//新增用户  第一个表格 动态提示
+	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+	})
+	
+	//模糊查询
+	 $('input[name=el_search]').on('input',function(){
+		var vals = $(this).val();
+		$.ajax({
+			type:"get",
+			url:"/read6?user="+vals,
+			async:true,
+			success:function(data){
+				if(data == 1){
+					$('.table_mys').html('');
+				}else{
+					$('.table_mys').html('');
+					$.each(data, function(index,item) {
+						var html = '<tr>';
+							html += '<td>'+item._id+'</td>';
+							html += '<td>'+item.user+'</td>';
+							html += '<td>'+item.password+'</td>';
+							html += '<td>'+item.age+'</td>';
+							html += '<td>'+item.numbers+'</td>';
+							html += '<td>'+item.name+'</td>';
+							html += '<td>'+item.phone+'</td>';
+							html += '<td>'+item.address+'</td>';
+							html += '<td><a href="javascript:" onclick="handleClick($(this))" class="btn btn-primary btn-sm">删除</a><a href="javascript:" onclick="handleClick5($(this))" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal2">编辑</a></td>';
+							html += '</tr>';
+						$('.table_mys').append(html)
+					});
+				}
+			},
+			error:function(){
+				alert('请求失败！')
+			}
+		});
+	})
+	
+	//总数据条数
+	var total;
+	
+	$.ajax({
+		type:"get",
+		url:"/read5",
+		async:false,
+		success:function(datas){
+			total = datas;
+			$('input[name=total]').val(total)
+		},
+		error:function(){
+			alert('请求失败!')
+		}
+	});
+	//总页数
+	var totalPages = Math.ceil(total / 5)
+	//总数据发生改变时的事件
+	$('input[name=total]').on('click',function(){
+		//总页数
+		totalPages = Math.ceil(total / 5)
+		
+		//如果直接用html('')，添加得li会一直叠加，这里一定记得remove掉！！
+		$('.pagination').find('li').not('.el_pagination2,.el_pagination').remove()
+		//分页显示(这里不对，点击会一直添加，得添加判断！)
+		for(var i = 1;i<totalPages+1; i++){
+			var html = '';
+			html += '<li onclick="curent_click(this)"><a href="javascrpt:">'+ i +'</a></li>';
+			$('.el_pagination').before(html)
+		}
+		
+		//给第一个元素添加active样式  已选中样式
+		var el_as = $('.pagination>li>a');
+		for(var k = 0;k<el_as.length;k++){
+			if($(el_as[k]).text() == 1){
+				$(el_as[k]).parent().addClass('active')
+			}
+		}
+	})
+	
+	//分页显示
+	for(var i = 1;i<totalPages+1; i++){
+		var html = '';
+		html += '<li onclick="curent_click(this)"><a href="javascrpt:">'+ i +'</a></li>';
+		$('.el_pagination').before(html)
+	}
+	//给第一个元素添加active样式  已选中样式
+	var el_as = $('.pagination>li>a');
+	for(var k = 0;k<el_as.length;k++){
+		if($(el_as[k]).text() == 1){
+			$(el_as[k]).parent().addClass('active')
+		}
+	}
+	//上一页点击功能
+		function up_Page(){
+			var curText = $('.active>a').text();
+			//当前的li
+			var currentLi = $('.pagination>li').eq(parseInt(curText-1));
+			if(curText > 1){
+				//满足条件 添加当前的样式，其余移除当前样式
+				$(currentLi).addClass('active').siblings().removeClass('active')
+				$.ajax({
+					type:"get",
+					url:"/read4?curPage="+(curText-1),
+					async:false,
+					success:function(datas){
+						$('.table_mys').html('')
+						$.each(datas, function(index,item) {
+							var id = item._id;
+							var user = item.user;
+							var password = item.password;
+							var age = item.age;
+							var numbers = item.numbers;
+							var name = item.name;
+							var phone = item.phone;
+							var address = item.address;
+							var html = '<tr><td>'+ id +'</td>';
+								html += '<td>'+ user +'</td>';
+								html += '<td>'+ password +'</td>';
+								html += '<td>'+ age +'</td>';
+								html += '<td>'+ numbers +'</td>';
+								html += '<td>'+ name +'</td>';
+								html += '<td>'+ phone +'</td>';
+								html += '<td>'+ address +'</td>';
+								html += '<td><a href="javascript:" onclick="handleClick($(this))" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".bs-example-modal-sm">删除</a>';
+								html += '<a href="javascript:" onclick="handleClick5($(this))" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal2">编辑</a></td>'
+								html += '</tr>'
+								$('.table_mys').append(html);
+						});
+					},
+					error:function(){
+						alert('请求失败！');
+					}
+				});
+			}else{
+				alert('已经到顶了哦!')
+			}
+		}
+	//下一页点击功能
+	function dowm_Page(){
+			var curText = parseInt($('.active>a').text());
+		//当前的li
+		var currentLi = $('.pagination>li').eq(curText + 1);
+		if(curText < totalPages){
+			//满足条件 添加当前的样式，其余移除当前样式
+			$(currentLi).addClass('active').siblings().removeClass('active')
+			$.ajax({
+				type:"get",
+				url:"/read4?curPage="+(curText + 1),
+				async:false,
+				success:function(datas){
+					console.log(datas);
+					$('.table_mys').html('')
+					$.each(datas, function(index,item) {
+						var id = item._id;
+						var user = item.user;
+						var password = item.password;
+						var age = item.age;
+						var numbers = item.numbers;
+						var name = item.name;
+						var phone = item.phone;
+						var address = item.address;
+						var html = '<tr><td>'+ id +'</td>';
+							html += '<td>'+ user +'</td>';
+							html += '<td>'+ password +'</td>';
+							html += '<td>'+ age +'</td>';
+							html += '<td>'+ numbers +'</td>';
+							html += '<td>'+ name +'</td>';
+							html += '<td>'+ phone +'</td>';
+							html += '<td>'+ address +'</td>';
+							html += '<td><a href="javascript:" onclick="handleClick($(this))" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".bs-example-modal-sm">删除</a>';
+							html += '<a href="javascript:" onclick="handleClick5($(this))" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal2">编辑</a></td>'
+							html += '</tr>'
+							$('.table_mys').append(html);
+					});
+				},
+				error:function(){
+					alert('请求失败！');
+				}
+			});
+		}else{
+			alert('没有更多啦!')
+		}
+	}
+	
+	//渲染初始页面
+	var datatime = new Date;
+	$.ajax({
+		type:"get",
+		url:"/read4",
+		async:true,
+		timeout:1000,//超时时间设置
+		success:function(datas){
+			$.each(datas, function(index,item) {
+				var id = item._id;
+				var user = item.user;
+				var password = item.password;
+				var age = item.age;
+				var numbers = item.numbers;
+				var name = item.name;
+				var phone = item.phone;
+				var address = item.address;
+				var html = '<tr><td>'+ id +'</td>';
+				html += '<td>'+ user +'</td>';
+				html += '<td>'+ password +'</td>';
+				html += '<td>'+ age +'</td>';
+				html += '<td>'+ numbers +'</td>';
+				html += '<td>'+ name +'</td>';
+				html += '<td>'+ phone +'</td>';
+				html += '<td>'+ address +'</td>';
+				html += '<td><a href="javascript:" onclick="handleClick($(this))" class="btn btn-primary btn-sm">删除</a>';
+				html += '<a href="javascript:" onclick="handleClick5($(this))" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal2">编辑</a></td>'
+				html += '</tr>'
+				$('.table_mys').append(html);
+			});
+		},
+		error:function(){
+			alert('请求失败！');
+		}
+	});
+
+	//分页按钮点击事件
+	function curent_click(obj){
+		//进度条事件开始
+//		var with1  = 0;
+//		$('.progress').stop(false,true).show();
+//		var timeId = setInterval(function(){
+//			with1 += 10;
+//			$('.progress-bar').css('width',with1+'%').text(with1+'%');
+//			if(with1 == 100){
+//				clearInterval(timeId)
+//			}
+//			setTimeout(function(){
+//				if($('.progress').css('display')=='none'){
+//					$('.progress-bar').css('width',0).text(0+'%');
+//				}
+//			},1400)
+//		},100)
+		//进度条事件结束
+		var curPage = $(obj).text().toString();
+		if(!!parseInt(curPage)){
+			$(obj).addClass('active').siblings().removeClass('active');
+			$.ajax({
+				type:"get",
+				url:"/read4?curPage="+curPage,
+				async:false,
+				success:function(datas){
+					//如果请求成功那么立马隐藏进度条
+//					$('.progress').stop(false,true).fadeOut(1600)
+					//为了让加载效果看的自然协调，这里用了一个定时器，进度条消失后内容刷新（做过场！！）
+//					setTimeout(function(){
+						$('.table_mys').html('')
+						$.each(datas, function(index,item) {
+							var id = item._id;
+							var user = item.user;
+							var password = item.password;
+							var age = item.age;
+							var numbers = item.numbers;
+							var name = item.name;
+							var phone = item.phone;
+							var address = item.address;
+							var html = '<tr><td>'+ id +'</td>';
+								html += '<td>'+ user +'</td>';
+								html += '<td>'+ password +'</td>';
+								html += '<td>'+ age +'</td>';
+								html += '<td>'+ numbers +'</td>';
+								html += '<td>'+ name +'</td>';
+								html += '<td>'+ phone +'</td>';
+								html += '<td>'+ address +'</td>';
+								html += '<td><a href="javascript:" onclick="handleClick($(this))" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".bs-example-modal-sm">删除</a>';
+								html += '<a href="javascript:" onclick="handleClick5($(this))" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal2">编辑</a></td>'
+								html += '</tr>'
+								$('.table_mys').append(html);
+						});
+//					},1400)
+				},
+				error:function(){
+					setTimeout(function(){
+						alert('请求失败！');
+						$('.progress').fadeOut(500)
+					},1000)
+				}
+			});
+		}
+	}
+	
+	//删除
+	function handleClick(obj){
+		var id = $(obj).parent().parent().find('td').eq(0).text();
+		var user = $(obj).parent().parent().find('td').eq(1).text();
+			alert(user)
+		$.ajax({
+			type:"get",
+			//这里？后面的id=就是后台接收到的名字，所以后台用这个名字接收数据
+			url:"/delete?id="+id+'&user='+user,
+			async:false,
+			success:function(data){
+				console.log(data)
+				var tr_length = $('.table_mys>tr').length-1;
+				var pages = $('.pagination>li.active').text();
+				
+				if(tr_length == 0){
+					if(pages == 1){
+						$('.pagination>li.active').click();
+					}else{
+						console.log(pages,$('.pagination>li').eq(pages))
+						$('.pagination>li').eq(pages).click();
+					}
+				}
+				if(data !== ''){
+					$(obj).parent().parent().remove()
+					total = total - 1;
+					$('input[name=total]').val(total).click()
+				}
+			},
+			error:function(){
+				alert('请求错误!')
+			}
+		});
+	}
+	
+	//编辑
+	function handleClick5(obj){
+		var _id = $(obj).parent().parent().find('td').eq(0).text();
+		$.ajax({
+			type:"get",
+			url:"/read2?id="+_id,
+			async:true,
+			success:function(datas){
+				var id = datas[0]._id;
+				var user = datas[0].user;
+				var password = datas[0].password;
+				var age = datas[0].age;
+				var name = datas[0].name;
+				var phone = datas[0].phone;
+				var numbers = datas[0].numbers;
+				var address = datas[0].address;
+				$('.el_edit>td:eq(0)').find('input').val(id)
+				$('.el_edit>td:eq(1)').find('input').val(user)
+				$('.el_edit>td:eq(2)').find('input').val(password)
+				$('.el_edit>td:eq(3)').find('input').val(age)
+				$('.el_edit>td:eq(4)').find('input').val(numbers)
+				$('.el_edit>td:eq(5)').find('input').val(name)
+				$('.el_edit>td:eq(6)').find('input').val(phone)
+				$('.el_edit>td:eq(7)').find('input').val(address)
+			},
+			error:function(){
+				alert('连接服务器失败！')
+			}
+		});
+	}
+	
+	//保存编辑后的数据
+	function handleClick4(){
+		var id = $('.el_edit>td:eq(0)').find('input').val()
+		var user = $('.el_edit>td:eq(1)').find('input').val()
+		var password = $('.el_edit>td:eq(2)').find('input').val()
+		var age = $('.el_edit>td:eq(3)').find('input').val()
+		var numbers = $('.el_edit>td:eq(4)').find('input').val()
+		var name = $('.el_edit>td:eq(5)').find('input').val()
+		var phone = $('.el_edit>td:eq(6)').find('input').val()
+		var address = $('.el_edit>td:eq(7)').find('input').val()
+		$.ajax({
+			type:'get',
+			url:'/update?id='+id+'&password='+password+'&user='+user+'&age='+age+'&numbers='+numbers+'&name='+name+'&phone='+phone+'&address='+address,
+			async:true,
+			success:function(datas){
+				location.reload()
+				console.log(datas)
+			},
+			error:function(){
+				alert('请求服务器失败！')
+			}
+		})
+	}
+	
+	//新增按键模态框  ‘+’号点击事件
+	function handleClick2(){
+		var html = '';
+		html += '<tr class="el_add">';
+		html += '<td><input type="text" data-toggle="tooltip" data-placement="top" title="请输入新的用户名" oninput="changge_value(this)"/></td>';
+		html += '<td><input type="text"/></td>';
+		html += '<td><input type="text"/></td>';
+		html += '<td><input type="text"/></td>';
+		html += '<td><input type="text"/></td>';
+		html += '<td><input type="text"/></td>';
+		html += '<td><input type="text"/></td>';
+		html += '<td><a href="javascrpt:" onclick="handleClick2()" class="btn btn-primary btn-sm">+</a>';
+		html += '&nbsp;<a href="javascrpt:" onclick="remove_self(this)" class="btn btn-primary btn-sm">删除</a></td>'
+		html += '</tr>';
+		$('.el_Tk>tbody>tr:last-child').after(html);
+	}
+	//新增按键模态框  ‘删除’按键点击事件
+	function remove_self(obj){
+		if($(obj).parent().parent().parent().children().length == 1){
+			alert('不要删除唯一的一个了!!')
+		}else{
+			$(obj).parent().parent().remove()
+		}
+	}
+	
+	//保存新增的数据
+	function handleClick3(){
+		var trs = $('#myModal .el_add');
+		var user;
+		var password;
+		var age;
+		var numbers;
+		var name;
+		var phone;
+		var address;
+		var users = [];
+		var flage;
+		for(var i = 0; i<trs.length; i++){
+			user = $(trs[i]).find('td:eq(0)>input').val();
+			//将需要判断的值加到数组
+			users.push(user);
+			password = $(trs[i]).find('td:eq(1)>input').val();
+			age = $(trs[i]).find('td:eq(2)>input').val();
+			numbers = $(trs[i]).find('td:eq(3)>input').val();
+			name = $(trs[i]).find('td:eq(4)>input').val();
+			phone = $(trs[i]).find('td:eq(5)>input').val();
+			address = $(trs[i]).find('td:eq(6)>input').val();
+			//将数组进行排序，目的是为了让相同的挨到一起，方便的判断是否有相同的元素
+			users.sort()
+			//将数组循环，挨个对比是否相同
+			for(var k = 0;k<users.length;k++){
+				//如果相同那么就不发送请求
+				if(users[k] == users[k+1]){
+					flage = false;
+					//如果不相同就发送请求
+				}else{
+					flage = true;
+				}
+			}
+			if(flage){
+				//发送请求
+				$.ajax({
+					type:"get",
+					url:'/create?add='+user+'&password='+password+'&age='+age+'&numbers='+numbers+'&name='+name+'&phone='+phone+'&address='+address,
+					async:true,
+					success:function(data){
+						console.log(data[0])
+						if(data[0] == 1){
+							location.reload();
+						}else{
+							console.log(data[0])
+							alert(data[0].user+'已有名字，请检查输入！');
+						}
+					},
+					error:function(){
+						alert("连接服务器失败！");
+					}
+				});
+			}
+		}
+	}
+	
+	//进度条的位置固定
+//	var html_height = document.body.offsetHeight;
+	var html_width = document.body.offsetWidth;
+	var self_left = (html_width - 500)/2 + 'px';
+	$('.progress').css({'top':400,'left':self_left});
+	
+	//设置cookie
+	function setCookie(c_name,value,expiredays){
+		var exdate=new Date()
+		exdate.setDate(exdate.getDate()+expiredays)
+		document.cookie=c_name+ "=" +value+ ((expiredays==null) ? "" : ";expires="+exdate)
+	}
+	//获取cookie
+	function getCookie(cname) {
+	    var name = cname + "=";
+	    var ca = document.cookie.split(';');
+	    for(var i=0; i<ca.length; i++) {
+	        var c = ca[i];
+	        while (c.charAt(0)==' ') c = c.substring(1);
+	        if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+	    }
+	    return "";
+	}
+	//删除cookie
+	function clearCookie(name) {  
+	    setCookie(name, "", -1);  
+	}
+	setCookie("","",-1)
+	setCookie("user","asdasd",1);
+	console.log('cookie:',document.cookie)
+	if(document.cookie !== ''){
+		alert(1)
+		//跳转到正常页面
+	}else{
+		alert(2)
+		location.href = '/login.html'
+		//跳转到登录
+	}
+</script>
+
+</body>
+</html>

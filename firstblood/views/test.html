@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../public/stylesheets/bootstrap.css"/>
+		<script src="../public/javascripts/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../public/javascripts/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.progress{
+				width: 500px;
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="progress">
+		  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+		    0%
+		  </div>
+		</div>
+		<div class="btns">点我</div>
+		<script type="text/javascript">
+			$('.btns').on('click',function(){
+				$('.progress').show();
+				var with1  = 0;
+				var timeId = setInterval(function(){
+					with1 += 10;
+					$('.progress-bar').css('width',with1+'%').text(with1+'%');
+					if(with1 == 100){
+						clearInterval(timeId)
+						$('.progress').fadeOut(500)
+						setTimeout(function(){
+							if($('.progress').css('display')=='none'){
+								$('.progress-bar').css('width',0).text(0+'%');
+							}
+						},600)
+					}
+				},100)
+			})
+		</script>
+	</body>
+</html>

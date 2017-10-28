@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>Document</title>
+	<style type="text/css">
+		.btn-default1{
+			background: #337ab7;
+			color: #fff;
+		}
+		.btn-default1:hover{
+			color: #fff!important;
+		}
+	</style>
+</head>
+<body>
+	<% include header.html %>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <h1>后台管理</h1>
+    <% if (status) { %>
+        <p class="lead">欢迎您： <%= username %></p> 
+        <p class="label label-info">登陆时间： <%= date %></p>
+        <h3>管理员列表</h3>
+        <% if (adminlist.length) { %>  
+            <table class="table table-hover span12" id="table_my">
+                <thead>
+                <tr>
+                    <th>#id</th>
+                    <th>用户名</th>
+                    <th>密码</th>
+                    <th>年龄</th>
+                    <th>订单编号</th>
+                    <th>送货方式</th>
+                    <th>用户电话</th>
+                    <th>家庭地址</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% adminlist.forEach(function(data){ %>
+                	<!--<script type="text/javascript">console.log('<%= data.id %>')</script>-->
+                    <tr>
+                        <td><%= data.id %></td>
+                        <td><%= data.user %></td>
+                        <td><%= data.password %></td>
+                        <td><%= data.age %></td>
+                        <td><%= data.numbers %></td>
+                        <td><%= data.name %></td>
+                        <td><%= data.phone %></td>
+                        <td><%= data.address %></td>
+                        <td>
+                        	<a href="javascript:" onclick="handleClick($(this))" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".bs-example-modal-sm">删除</a>
+                        	<a href="javascript:" onclick="handleClick5($(this))" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal2">编辑</a>
+                        </td>
+                    </tr>
+                <% }) %>  
+                </tbody>
+            </table>
+            <!-- Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">新增</h4>
+			      </div>
+			      <div class="modal-body">
+			        <table class="table table-hover span12 el_Tk">
+			        	<thead>
+			                <tr>
+			                    <th>用户名</th>
+			                    <th>密码</th>
+			                    <th>年龄</th>
+			                    <th>订单编号</th>
+			                    <th>送货方式</th>
+			                    <th>用户电话</th>
+			                    <th>家庭地址</th>
+			                </tr>
+		                </thead>
+			        	<tbody>
+		                    <tr class="el_add">
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><a href="javascrpt:" onclick="handleClick2()" class="btn btn-primary btn-sm">+</a></td>
+		                    </tr>
+		                </tbody>
+			        </table>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			        <button type="button" class="btn btn-primary" onclick="handleClick3()">保存</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			
+			 <!-- Modal2 -->
+			<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">新增</h4>
+			      </div>
+			      <div class="modal-body">
+			        <table class="table table-hover span12 el_Tk">
+			        	<thead>
+			                <tr>
+			                    <th>#id</th>
+			                    <th>用户名</th>
+			                    <th>密码</th>
+			                    <th>年龄</th>
+			                    <th>订单编号</th>
+			                    <th>送货方式</th>
+			                    <th>用户电话</th>
+			                    <th>家庭地址</th>
+			                </tr>
+		                </thead>
+			        	<tbody>
+		                    <tr class="el_edit">
+		                    	<td><input type="text" readonly="readonly"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                        <td><input type="text"/></td>
+		                    </tr>
+		                </tbody>
+			        </table>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			        <button type="button" class="btn btn-primary" onclick="handleClick4()">保存</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+				
+			<!--小模态框-->
+			<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+			  <div class="modal-dialog modal-sm" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">删除</h4>
+			      </div>
+				      <div class="modal-body">
+				        确定删除吗？
+				      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			        <button type="button" class="btn btn-default1" data-dismiss="modal">确定</button>
+			      </div>
+			  </div>
+			</div>
+		</div>
+		<nav aria-label="Page navigation">
+		  <ul class="pagination">
+		    <li>
+		      <a href="javascrpt:" aria-label="Previous">
+		        <span aria-hidden="true">&laquo;</span>
+		      </a>
+		    </li>
+		    <li class="active"><a href="javascrpt:">1</a></li>
+		    <li><a href="javascrpt:">2</a></li>
+		    <li><a href="javascrpt:">3</a></li>
+		    <li><a href="javascrpt:">4</a></li>
+		    <li><a href="javascrpt:">5</a></li>
+		    <li>
+		      <a href="javascrpt:" aria-label="Next">
+		        <span aria-hidden="true">&raquo;</span>
+		      </a>
+		    </li>
+		  </ul>
+		</nav>
+            <!--<a href="javascript:">新增</a>-->
+            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+			 		新增
+			</button>
+            <a href="/" class="btn btn-primary btn-sm">退出</a>
+        <% } %>  
+    <% } else {%>
+        <strong>登录失败 <a href="/">回首页</a></strong>
+    <% } %>  
+    </div>
+</div>
+<% include footer.html %>
+<script type="text/javascript">
+	//总页数
+	var totalPages;
+	$.ajax({
+		type:"get",
+		url:"/read5",
+		async:false,
+		success:function(datas){
+			totalPages = datas;
+		},
+		error:function(){
+			alert('请求失败!')
+		}
+	});
+	
+	//渲染初始页面
+	var datatime = new Date;
+	console.log(datatime)
+	$.ajax({
+		type:"get",
+		url:"/read4",
+		async:true,
+		success:function(datas){
+//			console.log('渲染初始页面:',datas);
+			$.each(datas, function(index,item) {
+				var id = item._id;
+				var user = item.user;
+				var password = item.password;
+				var age = item.age;
+				var name = item.name;
+				var phone = item.phone;
+				var address = item.address;
+				var numbers = item.numbers;
+				console.log('渲染初始页面:',id)
+			});
+		},
+		error:function(){
+			alert('请求失败！');
+		}
+	});
+	console.log('totalPages:',totalPages)
+	//分页按钮点击事件
+	$('.pagination>li>a').on('click',function(){
+		var curPage = $(this).text();
+		console.log(!!parseInt(curPage))
+		if(!!parseInt(curPage)){
+			$(this).parent().addClass('active').siblings().removeClass('active');
+			$.ajax({
+				type:"get",
+				url:"/home",
+				async:false,
+				success:function(datas){
+					console.log(datas);
+				},
+				error:function(){
+					alert('请求失败！');
+				}
+			});
+		}
+	})
+	//删除
+	function handleClick(obj){
+		var user2 = $(obj).parent().parent().find('td').eq(0).text();
+		$.ajax({
+			type:"get",
+			//这里？后面的password2=就是后台接收到的名字，所以后台用这个名字接收数据
+			url:"/delete?password2="+user2,
+			async:false,
+			data:user2,
+			success:function(data){
+				location.reload();
+//				$('#table_my').resize()
+			},
+			error:function(){
+				alert('请求错误!')
+			}
+		});
+	}
+	//编辑
+	
+	function handleClick5(obj){
+		var _id = $(obj).parent().parent().find('td').eq(0).text();
+		$.ajax({
+			type:"get",
+			url:"/read2?id="+_id,
+			async:true,
+			success:function(datas){
+				var id = datas[0]._id;
+				var user = datas[0].user;
+				var password = datas[0].password;
+				var age = datas[0].age;
+				var name = datas[0].name;
+				var phone = datas[0].phone;
+				var numbers = datas[0].numbers;
+				var address = datas[0].address;
+				$('.el_edit>td:eq(0)').find('input').val(id)
+				$('.el_edit>td:eq(1)').find('input').val(user)
+				$('.el_edit>td:eq(2)').find('input').val(password)
+				$('.el_edit>td:eq(3)').find('input').val(age)
+				$('.el_edit>td:eq(4)').find('input').val(numbers)
+				$('.el_edit>td:eq(5)').find('input').val(name)
+				$('.el_edit>td:eq(6)').find('input').val(phone)
+				$('.el_edit>td:eq(7)').find('input').val(address)
+			},
+			error:function(){
+				alert('连接服务器失败！')
+			}
+		});
+	}
+	//保存
+	function handleClick4(){
+		var id = $('.el_edit>td:eq(0)').find('input').val()
+		var user = $('.el_edit>td:eq(1)').find('input').val()
+		var password = $('.el_edit>td:eq(2)').find('input').val()
+		var age = $('.el_edit>td:eq(3)').find('input').val()
+		var numbers = $('.el_edit>td:eq(4)').find('input').val()
+		var name = $('.el_edit>td:eq(5)').find('input').val()
+		var phone = $('.el_edit>td:eq(6)').find('input').val()
+		var address = $('.el_edit>td:eq(7)').find('input').val()
+		console.log(id)
+		$.ajax({
+			type:'get',
+			url:'/update?id='+id+'&user='+user+'&password='+password+'&age='+age+'&numbers='+numbers+'&name='+name+'&phone='+phone+'&address='+address,
+			async:true,
+			success:function(datas){
+				location.reload()
+				console.log(datas)
+			},
+			error:function(){
+				alert('请求服务器失败！')
+			}
+		})
+	}
+	function handleClick2(){
+		var html = '';
+		html += '<tr>';
+		html += '<td><input type="text"/></td>';
+		html += '<td><input type="text"/></td>';
+		html += '<td><input type="text"/></td>';
+		html += '<td><a href="javascrpt:" onclick="handleClick2()" class="btn btn-primary btn-sm">+</a></td>';
+		html += '</tr>';
+		$('.el_Tk>tbody>tr:last-child').after(html);
+	}
+	
+	function handleClick3(){
+//		var users = $('.el_Tk>tbody>tr>td').eq(0).find('input').val().toString();
+//		var passwords = $('.el_Tk>tbody>tr>td').eq(1).find('input').val().toString();
+//		var ages = $('.el_Tk>tbody>tr>td').eq(2).find('input').val();
+		var user = $('.el_add>td:eq(0)').find('input').val()
+		var password = $('.el_add>td:eq(1)').find('input').val()
+		var age = $('.el_add>td:eq(2)').find('input').val()
+		var numbers = $('.el_add>td:eq(3)').find('input').val()
+		var name = $('.el_add>td:eq(4)').find('input').val()
+		var phone = $('.el_add>td:eq(5)').find('input').val()
+		var address = $('.el_add>td:eq(6)').find('input').val()
+//		console.log(users,passwords,ages)
+		$.ajax({
+			type:"get",
+//			url:"/create?add="+users+"&password="+passwords+"&age="+ages,
+			url:'/create?add='+user+'&password='+password+'&age='+age+'&numbers='+numbers+'&name='+name+'&phone='+phone+'&address='+address,
+			async:true,
+			success:function(data){
+				console.log(data)
+				if(data == 2){
+					alert('已有名字，请重新输入！')
+				}else{
+					location.reload();
+				}
+			},
+			error:function(){
+				alert("连接服务器失败！")
+			}
+		});
+	}
+</script>
+
+</body>
+</html>

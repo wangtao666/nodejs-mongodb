@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<!--查看是否数据库有该数据，有渲染hell world  没有渲染 滚！-->
+		<% if (data) { %>
+			<h1>Hello World!</h1>
+			<!--如果返回的数据有内容那么进行遍历-->
+			<% if (datas.length) { %>
+				<% datas.forEach(function(data1){ %>
+					<!--data1是自己命名的，代表出来的对象，点相应的属性名可获得属性值，有多少属性值就循环出多少h2-->
+					<h2>欢迎您：<%= data1.user %></h2>
+					<h2>您的密码是：<%= data1.password %></h2>
+				<% }) %>
+			<% } %>
+			<!--没有该用户名或者密码错误时渲染的页面-->
+		<% } else {%>
+			<h1>滚！</h1>
+		<% } %>
+	</body>
+</html>
