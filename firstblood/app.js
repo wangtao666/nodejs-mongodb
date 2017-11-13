@@ -10,10 +10,11 @@ var express = require('express')
   , ejs = require('ejs')//手动添加 ejs 以便支持 .html
 , mongoose = require("mongoose")
 , userlist = require("./db/firstblood_schema.js").userlist
-, newslist = require("./db/firstblood_schema.js").newslist;
-
+, newslist = require("./db/firstblood_schema.js").newslist
+,router = require('./routes')
 var app = express();
 var http = require("http");
+var request = require('request');
 //var agent = new http.Agent();
 var agent = new http.Agent({
   keepAlive: true,
@@ -32,8 +33,6 @@ client.on("error", function (err) {
 });
   
 //client.on("connect", runSample);
-
-  
 
 // all environments 依赖的环境（配置参数）
 app.set('port', process.env.PORT || 8888);
@@ -174,8 +173,9 @@ app.get("/read2", function(req, res) {
 //读取
 app.get("/read3", function(req, res) {
     console.log("读取函数3");
+    console.log("读取函数3",req.query.user);
     client.HGETALL(req.query.user,function(err,reply){
-    	console.log('查看是否有缓存:',reply)
+    	console.log('查看是否有缓存:',reply !== null)
 		if(reply !== null){
 			/**设置响应头允许ajax跨域访问**/
 			res.setHeader("Access-Control-Allow-Origin","*");
@@ -184,7 +184,7 @@ app.get("/read3", function(req, res) {
 			console.log('读取的缓存数据！！')
 			res.send(reply);
 		}else{
-			console.log('读取的数据库里面的数据！！')
+			console.log('22读取的数据库里面的数据！！')
 			userlist.find({user:req.query.user}, function(err, docs) {
 		    	/**设置响应头允许ajax跨域访问**/
 				res.setHeader("Access-Control-Allow-Origin","*");
@@ -209,6 +209,11 @@ app.get("/read3", function(req, res) {
 		}
 	})
 });
+
+app.get('/test',function(req,res){
+	console.log('test函数测试！')
+	
+})
 
 //模糊查询
 app.get("/read6", function(req, res) {
@@ -361,10 +366,11 @@ app.get('/deleteNew',function(req,res){
 
 //安装师傅需要接口
 app.get("/read10", function(req, res) {
-    console.log("读取函数10");
+    console.log("读取函数10,我限制了跨域的地址，只有http://192.168.79.12:8080可以访问！");
 	userlist.find({user:req.query.user}, function(err, docs) {
-    	/**设置响应头允许ajax跨域访问**/
-		res.setHeader("Access-Control-Allow-Origin","*");
+    	/**设置响应头允许ajax跨域访问   这里可是限制允许跨域的地址，一定是协议+ip+端口  其余地址就无法跨域请求**/
+		// res.setHeader("Access-Control-Allow-Origin","http://127.0.0.1:8080");
+        res.setHeader("Access-Control-Allow-Origin","*");
 		/*星号表示所有的异域请求都可以接受，*/
 		res.setHeader("Access-Control-Allow-Methods","GET,POST");
 //				console.log('返回的数据：',docs)
@@ -377,7 +383,24 @@ app.get("/read10", function(req, res) {
        
     });
 });
+
+//node代理java接口，转发数据!!!麻蛋，之前弄那么久！！代理放在后面对前面代码不会有影响！
+app.get('/api',function(req,res){
+    /**设置响应头允许ajax跨域访问**/
+    res.setHeader("Access-Control-Allow-Origin","*");
+    /*星号表示所有的异域请求都可以接受，*/
+    res.setHeader("Access-Control-Allow-Methods","GET,POST");
+    request('http://172.30.3.76:8880/b2cordercenter/retailOuter/orderCount?phones='+req.query.phone, function (error, response, body) {
+        console.log('error:', error); // 返回错误信息
+        console.log('statusCode:', response && response.statusCode); // 返回请求的状态码
+        console.log('body:', body); // 返回回来的数据
+        res.send(body);
+    });
+})
+
 // 创建一个http server 启动端口 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+module.exports = app;

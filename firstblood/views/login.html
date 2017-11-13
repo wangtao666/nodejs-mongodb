@@ -50,16 +50,16 @@
 								}else{
 									console.log('login1')
 									alert('登录成功！');
-									function SetCookie(name, value){  
-									    //定义一天  
-									    var days = 1;  
-									    var exp = new Date();  
-									    //定义的失效时间，  
-									    exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);    
-									    //写入Cookie  ，toGMTstring将时间转换成字符串。  
-									    
+									function SetCookie(name, value){
+									    //定义一天
+									    var days = 1;
+									    var exp = new Date();
+									    //定义的失效时间，
+									    exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);
+									    //写入Cookie  ，toGMTstring将时间转换成字符串。
+
 									}
-//									$('.span12').submit();
+									$('.span12').submit();
 								}
 							}else{
 								if(password !== data.password){
@@ -67,7 +67,7 @@
 								}else{
 									alert('登录成功！');
 									console.log('login2')
-//									$('.span12').submit();
+									$('.span12').submit();
 								}
 							}
 						}
