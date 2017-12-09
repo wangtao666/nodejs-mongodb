@@ -40,4 +40,4 @@ exports.newslist = db.model('admin',newslistScheMa,'admin');
 //表三
 exports.todolist = db.model('todo',todolistScheMa,'todo');
 exports.db = db;
-console.log('数据库启动成功！！！！')
+console.log('数据库启动成功！！！！');

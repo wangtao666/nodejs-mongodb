@@ -11,7 +11,9 @@ var express = require('express')
 , mongoose = require("mongoose")
 , userlist = require("./db/firstblood_schema.js").userlist
 , newslist = require("./db/firstblood_schema.js").newslist
+, todolist = require("./db/firstblood_schema.js").todolist
 ,router = require('./routes')
+
 var app = express();
 var http = require("http");
 var request = require('request');
@@ -166,8 +168,6 @@ app.get("/read2", function(req, res) {
     	}else{
     		res.send(docs);
     	}
-        /*对docs进行操作*/
-       
     });
 });
 //读取
@@ -210,10 +210,10 @@ app.get("/read3", function(req, res) {
 	})
 });
 
-app.get('/test',function(req,res){
-	console.log('test函数测试！')
-	
-})
+// app.get('/test',function(req,res){
+// 	console.log('test函数测试！')
+//
+// })
 
 //模糊查询
 app.get("/read6", function(req, res) {
@@ -247,7 +247,7 @@ app.get("/update", function(req, res) {
       },function(err,doces){
       	console.log('更新函数:',doces);
       }
-    )
+    );
     userlist.update({
         _id : req.query.id
     }, {
@@ -382,6 +382,77 @@ app.get("/read10", function(req, res) {
         /*对docs进行操作*/
        
     });
+});
+
+//todo接口部分  新增
+app.get('/todo_add',function (req,res) {
+	console.log('我的logo接口')
+    var todolist2 = new todolist({
+        label: req.query.label,
+        content: req.query.content
+    });
+
+    todolist2.save(function(err,docs){
+    	console.log(docs)
+        /**设置响应头允许ajax跨域访问**/
+        res.setHeader("Access-Control-Allow-Origin","*");
+        /*星号表示所有的异域请求都可以接受，*/
+        res.setHeader("Access-Control-Allow-Methods","GET,POST");
+        if(err){
+            res.send('1')
+        }else{
+            res.send('保存成功！')
+        }
+    })
+});
+
+//todo接口部分  查询
+app.get('/todo_search',function (req,res) {
+	console.log('我是todo查询')
+	todolist.find({_id:req.query.id},function (err,docs) {
+        /**设置响应头允许ajax跨域访问**/
+        res.setHeader("Access-Control-Allow-Origin","*");
+        /*星号表示所有的异域请求都可以接受，*/
+        res.setHeader("Access-Control-Allow-Methods","GET,POST");
+        if(docs == ''){
+            res.send('1');
+        }else{
+            res.send(docs);
+        }
+    })
+})
+
+//todo接口部分  查询所有
+app.get('/todo_search_all',function (req,res) {
+	console.log('我在查询todo所有的信息！')
+	todolist.find({},function (err,docs) {
+        /**设置响应头允许ajax跨域访问**/
+        res.setHeader("Access-Control-Allow-Origin","*");
+        /*星号表示所有的异域请求都可以接受，*/
+        res.setHeader("Access-Control-Allow-Methods","GET,POST");
+        if(docs == ''){
+            res.send('1');
+        }else{
+            res.send(docs);
+        }
+    })
+})
+
+//todo接口部分  修改
+app.get('/todo_change',function (req,res) {
+    console.log('我正在保存修改');
+    console.log(req.query.label,req.query.content);
+    todolist.update({
+        _id : req.query.id
+    }, {
+        label:req.query.label,
+        content: req.query.content
+    }, function(error) {});
+    /**设置响应头允许ajax跨域访问**/
+    res.setHeader("Access-Control-Allow-Origin","*");
+    /*星号表示所有的异域请求都可以接受，*/
+    res.setHeader("Access-Control-Allow-Methods","GET,POST");
+    res.send("更新成功！！");
 });
 
 //node代理java接口，转发数据!!!麻蛋，之前弄那么久！！代理放在后面对前面代码不会有影响！
