@@ -424,6 +424,7 @@ app.get('/todo_search',function (req,res) {
 
 //todo接口部分  查询所有
 app.get('/todo_search_all',function (req,res) {
+	// res.send('可以返回东西了')
 	console.log('我在查询todo所有的信息！')
 	todolist.find({},function (err,docs) {
         /**设置响应头允许ajax跨域访问**/
@@ -456,7 +457,7 @@ app.get('/todo_change',function (req,res) {
 });
 
 //node代理java接口，转发数据!!!麻蛋，之前弄那么久！！代理放在后面对前面代码不会有影响！
-app.get('/api',function(req,res){
+app.get('/apis',function(req,res){
     /**设置响应头允许ajax跨域访问**/
     res.setHeader("Access-Control-Allow-Origin","*");
     /*星号表示所有的异域请求都可以接受，*/
